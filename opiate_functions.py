@@ -1,6 +1,7 @@
 import os
 import sys
 import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
 from scipy.integrate import odeint
 
@@ -20,7 +21,7 @@ def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, m
     dSdt = -alpha[min(int(t), t_max - 1)] * S - beta_a[min(int(t), t_max - 1)] * S * A - beta_p[
         min(int(t), t_max - 1)] * S * P \
            + epsilon[min(int(t), t_max - 1)] * P + delta[min(int(t), t_max - 1)] * R + mu[min(int(t), t_max - 1)] * (
-                       P + R) \
+                   P + R) \
            + mu_s[min(int(t), t_max - 1)] * A
 
     dPdt = alpha[min(int(t), t_max - 1)] * S - (epsilon[min(int(t), t_max - 1)] + gamma[min(int(t), t_max - 1)] \
@@ -31,7 +32,7 @@ def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, m
            - (zeta[min(int(t), t_max - 1)] + mu_s[min(int(t), t_max - 1)]) * A
 
     dRdt = zeta[min(int(t), t_max - 1)] * A - (
-                delta[min(int(t), t_max - 1)] + sigma[min(int(t), t_max - 1)] + mu[min(int(t), t_max - 1)]) * R
+            delta[min(int(t), t_max - 1)] + sigma[min(int(t), t_max - 1)] + mu[min(int(t), t_max - 1)]) * R
 
     return [dSdt, dPdt, dAdt, dRdt]
 
@@ -68,9 +69,7 @@ def addiction_cost(population_size, initial_conditions, params, a_cost, t_start=
     # Sum total monthly percentage of addictions, multiply by population to get total number of addiction cases
     tot_addicted = sum(A[t_start: t_end]) * population_size
 
-    cost = a_cost * tot_addicted
-
-    return cost
+    return a_cost * tot_addicted
 
 
 def rehab_cost(population_size, initial_conditions, params, r_cost, t_start=0, t_end=t_max):
@@ -88,13 +87,10 @@ def rehab_cost(population_size, initial_conditions, params, r_cost, t_start=0, t
     sol = ode_solver(tspan, initial_conditions, params)
     S, P, A, R = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3]
 
-    # Sum total monthly percentage of people in rebah, multiply by population to get total number of rehab cases
+    # Sum total monthly percentage of people in rehab, multiply by population to get total number of rehab cases
     tot_rehab = sum(R[t_start: t_end]) * population_size
 
-    cost = r_cost * tot_addicted
-
-    return cost
-
+    return r_cost * tot_rehab
 
 
 # Parameters as functions of time must be in the form of an array with size 1 x t_max
