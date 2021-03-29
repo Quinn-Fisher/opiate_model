@@ -57,8 +57,13 @@ def addiction_cost(population_size, initial_conditions, params, a_cost, t_start=
     a_cost must be per case per month.
     """
 
-    if t_end > t_max or t_start > t_max:
-        print('t_end or t_start is too large')
+    if t_end > t_max:
+        t_end = t_max
+        print('End time larger than t_max. Showing simulation up to t_max instead.')
+
+    if t_start > t_max:
+        t_start = t_max
+        print('Start time larger than t_max. Showing simulation starting at t_max instead.')
 
     tspan = np.arange(0, t_max, 1)
     sol = ode_solver(tspan, initial_conditions, params)
@@ -78,8 +83,13 @@ def rehab_cost(population_size, initial_conditions, params, r_cost, t_start=0, t
     r_cost must be per case per month.
     """
 
-    if t_end > t_max or t_start > t_max:
-        print('t_end or t_start is too large')
+    if t_end > t_max:
+        t_end = t_max
+        print('End time larger than t_max. Showing simulation up to t_max instead.')
+
+    if t_start > t_max:
+        t_start = t_max
+        print('Start time larger than t_max. Showing simulation starting at t_max instead.')
 
     tspan = np.arange(0, t_max, 1)
     sol = ode_solver(tspan, initial_conditions, params)
