@@ -16,6 +16,6 @@ plt.plot(tspan, RC, label='RC')
 plt.legend()
 plt.show()
 # Approximate integral of A by summing elements
-sumA = sum(A)
+sumA = sum(A) * op.time_step
 
 print(sumA, AC[len(AC) - 1])
