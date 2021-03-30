@@ -5,7 +5,7 @@ from scipy.integrate import odeint
 
 # Maximum time (in years) for simulation to run
 t_max = 15
-
+dt = 1/12 #Time step of one month
 
 def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s):
     """Creates  Differential equations/compartments"""
@@ -65,7 +65,7 @@ def addiction_cost(population_size, initial_conditions, params, a_cost, t_start=
         t_start = t_max
         print('Start time larger than t_max. Showing simulation starting at t_max instead.')
 
-    tspan = np.arange(0, t_max, 1)
+    tspan = np.arange(0, t_max, dt)
     sol = ode_solver(tspan, initial_conditions, params)
     S, P, A, R = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3]
 
@@ -91,7 +91,7 @@ def rehab_cost(population_size, initial_conditions, params, r_cost, t_start=0, t
         t_start = t_max
         print('Start time larger than t_max. Showing simulation starting at t_max instead.')
 
-    tspan = np.arange(0, t_max, 1)
+    tspan = np.arange(0, t_max, dt)
     sol = ode_solver(tspan, initial_conditions, params)
     S, P, A, R = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3]
 
@@ -101,7 +101,7 @@ def rehab_cost(population_size, initial_conditions, params, r_cost, t_start=0, t
     return r_cost * tot_rehab
 
 
-# Parameters as functions of time must be in the form of an array with size 1 x t_max
+# Parameters as functions of time must be in the form of an array with size 1 x (t_max / dt)
 
 initN = 1  # Initial percentage of total population: keep at 1
 initP = 0  # Initial percentage of population in P compartment
@@ -110,27 +110,27 @@ initR = 0  # Initial percentage of population in R compartment
 
 # Parameter values taken from https://link.springer.com/article/10.1007/s11538-019-00605-0
 
-alpha = [0.015 for i in np.arange(0, t_max, 1)]  # Prescription rate per person per year
+alpha = [0.015 for i in np.arange(0, t_max, dt)]  # Prescription rate per person per year
 
-epsilon = [0.8 for i in np.arange(0, t_max, 1)]  # End prescription without addiction (rate)
+epsilon = [0.8 for i in np.arange(0, t_max, dt)]  # End prescription without addiction (rate)
 
-beta_p = [0.00266 for i in np.arange(0, t_max, 1)]  # Illicit addiction rate based on P-class
+beta_p = [0.00266 for i in np.arange(0, t_max, dt)]  # Illicit addiction rate based on P-class
 
-beta_a = [0.00094 for i in np.arange(0, t_max, 1)]  # Illicit addiction rate based on A-class
+beta_a = [0.00094 for i in np.arange(0, t_max, dt)]  # Illicit addiction rate based on A-class
 
-gamma = [0.00744 for i in np.arange(0, t_max, 1)]  # Prescription-induced addiction rate
+gamma = [0.00744 for i in np.arange(0, t_max, dt)]  # Prescription-induced addiction rate
 
-zeta = [0.2 for i in np.arange(0, t_max, 1)]  # Rate of A entry into rehabilitation
+zeta = [0.2 for i in np.arange(0, t_max, dt)]  # Rate of A entry into rehabilitation
 
-delta = [0.1 for i in np.arange(0, t_max, 1)]  # Successful treatment rate
+delta = [0.1 for i in np.arange(0, t_max, dt)]  # Successful treatment rate
 
-sigma = [0.9 for i in np.arange(0, t_max, 1)]  # Natural relapse rate of R-class
+sigma = [0.9 for i in np.arange(0, t_max, dt)]  # Natural relapse rate of R-class
 
-mu = [0.00729 for i in np.arange(0, t_max, 1)]  # Natural death rate
+mu = [0.00729 for i in np.arange(0, t_max, dt)]  # Natural death rate
 
-mu_s = [0.01159 for i in np.arange(0, t_max, 1)]  # Death rate of addicts
+mu_s = [0.01159 for i in np.arange(0, t_max, dt)]  # Death rate of addicts
 
 # Set up default initial conditions and parameters
 initial_conditions = [initP, initA, initR, initN]
 params = [alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s]
-tspan = np.arange(0, t_max, 1 / 12)
+tspan = np.arange(0, t_max, dt)
