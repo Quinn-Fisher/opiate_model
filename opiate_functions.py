@@ -54,7 +54,7 @@ def addiction_cost(population_size, initial_conditions, params, a_cost, t_start=
     Uses population size, initial values, parameters, and addiction social cost 
     per case to determine total social cost from t_start to t_end.
     
-    a_cost must be per case per month.
+    a_cost must be in cost per year.
     """
 
     if t_end > t_max:
@@ -69,7 +69,7 @@ def addiction_cost(population_size, initial_conditions, params, a_cost, t_start=
     sol = ode_solver(tspan, initial_conditions, params)
     S, P, A, R = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3]
 
-    # Sum total monthly percentage of addictions, multiply by population to get total number of addiction cases
+    # Sum total annual percentage of addictions, multiply by population to get total number of addiction cases
     tot_addicted = sum(A[t_start: t_end]) * population_size
 
     return a_cost * tot_addicted
@@ -80,7 +80,7 @@ def rehab_cost(population_size, initial_conditions, params, r_cost, t_start=0, t
     Uses population size, initial values, parameters, and addiction social cost 
     per case to determine total social cost from t_start to t_end.
     
-    r_cost must be per case per month.
+    r_cost must be per case per year.
     """
 
     if t_end > t_max:
@@ -95,7 +95,7 @@ def rehab_cost(population_size, initial_conditions, params, r_cost, t_start=0, t
     sol = ode_solver(tspan, initial_conditions, params)
     S, P, A, R = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3]
 
-    # Sum total monthly percentage of people in rehab, multiply by population to get total number of rehab cases
+    # Sum total annual percentage of people in rehab, multiply by population to get total number of rehab cases
     tot_rehab = sum(R[t_start: t_end]) * population_size
 
     return r_cost * tot_rehab
@@ -108,10 +108,9 @@ initP = 0  # Initial percentage of population in P compartment
 initA = 0  # Initial percentage of population in A compartment
 initR = 0  # Initial percentage of population in R compartment
 
-# Parameter values taken from https://link.springer.com/article/10.1007/s11538-019-00605-0 however, divided by 12 to
-# get averages per month
+# Parameter values taken from https://link.springer.com/article/10.1007/s11538-019-00605-0
 
-alpha = [0.015 for i in np.arange(0, t_max, 1)]  # Prescription rate per person per month
+alpha = [0.015 for i in np.arange(0, t_max, 1)]  # Prescription rate per person per year
 
 epsilon = [0.8 for i in np.arange(0, t_max, 1)]  # End prescription without addiction (rate)
 
@@ -131,6 +130,7 @@ mu = [0.00729 for i in np.arange(0, t_max, 1)]  # Natural death rate
 
 mu_s = [0.01159 for i in np.arange(0, t_max, 1)]  # Death rate of addicts
 
+# Set up default initial conditions and parameters
 initial_conditions = [initP, initA, initR, initN]
 params = [alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s]
 tspan = np.arange(0, t_max, 1 / 12)
