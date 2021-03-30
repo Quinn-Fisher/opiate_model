@@ -5,7 +5,10 @@ from scipy.integrate import odeint
 
 # Maximum time (in years) for simulation to run
 t_max = 15
-dt = 1/12 #Time step of one month
+
+# Time step of one month
+dt = 1 / 12
+
 
 def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s):
     """Creates  Differential equations/compartments"""
@@ -110,7 +113,7 @@ initR = 0  # Initial percentage of population in R compartment
 
 # Parameter values taken from https://link.springer.com/article/10.1007/s11538-019-00605-0
 
-alpha = [0.015 for i in np.arange(0, t_max, dt)]  # Prescription rate per person per year
+alpha = [0.15 for i in np.arange(0, t_max, dt)]  # Prescription rate per person per year
 
 epsilon = [0.8 for i in np.arange(0, t_max, dt)]  # End prescription without addiction (rate)
 
