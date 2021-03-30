@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from scipy.integrate import odeint
 
-# Maximum time (in months) for simulation to run
+# Maximum time (in years) for simulation to run
 t_max = 15
 
 
@@ -133,4 +133,4 @@ mu_s = [0.01159 for i in np.arange(0, t_max, 1)]  # Death rate of addicts
 
 initial_conditions = [initP, initA, initR, initN]
 params = [alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s]
-tspan = np.arange(0, t_max, 1)
+tspan = np.arange(0, t_max, 1 / 12)
