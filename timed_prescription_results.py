@@ -2,13 +2,11 @@ import opiate_functions as op
 import numpy as np
 import scipy as sc
 import matplotlib.pyplot as plt
-from matplotlib import cm
 import timed_functions as tf
-import time as time
-from scipy.interpolate import griddata
+
 
 # set up initial conditions
-initial = [0.15, 0.02, 0, 1, 0.02, 0]
+initial = [op.P[-1], op.A[1], op.R[-1], op.initN, op.A[-1], op.R[-1]]
 
 # Set outbreak conditions and "lock-down" length
 ob = 3  # multiplicative of addiction rates
@@ -39,8 +37,8 @@ cost_array = np.array(cost_array)
 
 fig, ax = plt.subplots(figsize=(6, 6))
 im = ax.imshow(cost_array, interpolation='none')
-ax.set_aspect(4)
-_cs2 = ax.contour(cost_array, levels=[6100, 6150, 6200, 6240], colors=['white', 'pink', 'red', 'blue'])
+ax.set_aspect(2)
+_cs2 = ax.contour(cost_array, levels=[2325, 2375, 2425, 2475], colors=['white', 'pink', 'red', 'blue'])
 
 x_label_list = ['0', '0.5', '1', '1.5', '2']
 y_label_list = ['0', '0.25', '0.5', '0.75', '1']
@@ -54,7 +52,7 @@ cbar.add_lines(_cs2)
 
 plt.xlabel('Initial Time of Prescription Lock-down (years)')
 plt.ylabel('Magnitude of Prescription Lock-Down (percentage of initial rate)')
-plt.title('Cost of 3-fold outbreak at month 0 for 0.5 years')
+plt.title('Cost of 3-fold outbreak at month 0 until 1 years')
 plt.show()
 
 print(cost_array.shape)

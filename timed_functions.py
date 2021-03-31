@@ -20,7 +20,7 @@ def outbreak(t_start, t_end, level):
     def b_p(t):
         if t < t_start:
             beta_p = 0.00266
-        elif t > t_start + t_end:
+        elif t > t_end:
             beta_p = 0.00266
         else:
             beta_p = 0.00266 * level
@@ -30,7 +30,7 @@ def outbreak(t_start, t_end, level):
     def b_a(t):
         if t < t_start:
             beta_a = 0.0094
-        elif t > t_start + t_end:
+        elif t > t_end:
             beta_a = 0.0094
         else:
             beta_a = 0.0094 * level
@@ -40,7 +40,7 @@ def outbreak(t_start, t_end, level):
     def gamma(t):
         if t < t_start:
             gamma_ = 0.00744
-        elif t > t_start + t_end:
+        elif t > t_end:
             gamma_ = 0.00744
         else:
             gamma_ = 0.00744 * level
