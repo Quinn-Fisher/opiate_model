@@ -4,9 +4,9 @@ import numpy as np
 from scipy.integrate import odeint
 
 # Maximum time (in years) for simulation to run
-t_max = 15
+t_max = 10
 
-# Time step of one month
+# Time step
 dt = 0.0001
 
 
@@ -16,20 +16,19 @@ def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, m
     S, P, A, R, AC, RC = z
     N = S + P + A + R
 
-    # odeint does some weird approximations with t, so we index parameters by min(int(t), t_max - 1) just to ensure
-    # that they are integer values from 0 to t_max
+    # Use continuous parameter functions
 
     dSdt = -alpha(t) * S - beta_a(t) * S * A - beta_p(t) * S * P + epsilon(t) * P + delta(t) * R + mu(t) * (P + R) \
            + mu_s(t) * A
 
     dPdt = alpha(t) * S - (epsilon(t) + gamma(t) + mu(t)) * P
 
-    dAdt = gamma(t) * P + sigma(t) * R + beta_a(t) * S * A + beta_p(t) * S * P - (zeta(t)+ mu_s(t)) * A
+    dAdt = gamma(t) * P + sigma(t) * R + beta_a(t) * S * A + beta_p(t) * S * P - (zeta(t) + mu_s(t)) * A
 
     dRdt = zeta(t) * A - (delta(t) + sigma(t) + mu(t)) * R
 
+    # Set diff. eq. for cost functions of addiction and rehab
     dACdt = A
-
     dRCdt = R
 
     return [dSdt, dPdt, dAdt, dRdt, dACdt, dRCdt]
@@ -50,7 +49,6 @@ def ode_solver(t, initial_conditions, params):
 
 
 def con_cost(t, initial_conditions, params, a_cost, r_cost, population=1):
-
     sol = ode_solver(t, initial_conditions, params)
     S, P, A, R, AC, RC = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3], sol[:, 4], sol[:, 5]
 
@@ -59,8 +57,8 @@ def con_cost(t, initial_conditions, params, a_cost, r_cost, population=1):
 
     return AddictCost + RehabCost
 
-# Parameters as functions of time must be in the form of an array with size 1 x (t_max / dt)
 
+# Set up some default initial conditions (WILL BE CHANGED LATER)
 initN = 1  # Initial percentage of total population: keep at 1
 initP = 0  # Initial percentage of population in P compartment
 initA = 0  # Initial percentage of population in A compartment
@@ -68,8 +66,9 @@ initR = 0  # Initial percentage of population in R compartment
 initAC = initA
 initRC = initR
 
-# Parameter values taken from https://link.springer.com/article/10.1007/s11538-019-00605-0
 
+# Parameter values taken from https://link.springer.com/article/10.1007/s11538-019-00605-0
+# Creat continuous functions for parameters
 
 def alpha(t):
     return 0.15
@@ -111,7 +110,7 @@ def mu_s(t):
     return 0.01159
 
 
-# Set up default initial conditions and parameters
+# Set up default initial conditions, parameters, and solutions
 initial_conditions = [initP, initA, initR, initN, initAC, initRC]
 params = [alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s]
 tspan = np.arange(0, t_max, dt)
