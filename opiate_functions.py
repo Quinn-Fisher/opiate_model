@@ -49,6 +49,16 @@ def ode_solver(t, initial_conditions, params):
     return res
 
 
+def con_cost(t, initial_conditions, params, a_cost, r_cost, population=1):
+
+    sol = ode_solver(t, initial_conditions, params)
+    S, P, A, R, AC, RC = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3], sol[:, 4], sol[:, 5]
+
+    AddictCost = a_cost * population * AC[-1]
+    RehabCost = r_cost * population * RC[-1]
+
+    return AddictCost + RehabCost
+
 # Parameters as functions of time must be in the form of an array with size 1 x (t_max / dt)
 
 initN = 1  # Initial percentage of total population: keep at 1
