@@ -37,25 +37,10 @@ for i in np.arange(0, 1, 0.02):
 
 cost_array = np.array(cost_array)
 
-# fig, ax = plt.subplots(figsize=(6, 6))
-# ax.imshow(cost_array, interpolation='none', extent=[0, cost_time, 1, 0])
-# ax.set_aspect(2)
-# # plt.contour(cost_array, [6000],origin='lower', colors=['red'])
-# ax = plt.gca()  # get the current axes
-# for PCM in ax.get_children():
-#     if isinstance(PCM, cm.ScalarMappable):
-#         break
-# plt.colorbar(PCM, ax=ax)
-# plt.xlabel('Initial Time of Prescription Lock-down (years)')
-# plt.ylabel('Magnitude of Prescription Lock-Down (percentage of initial rate)')
-# plt.title('Cost of 3-fold outbreak at month 0 for 0.5 years')
-# plt.show()
-
-
 fig, ax = plt.subplots(figsize=(6, 6))
 im = ax.imshow(cost_array, interpolation='none')
 ax.set_aspect(4)
-_cs2 = ax.contour(cost_array, levels=[5930, 5960, 6000, 6050], colors=['white', 'pink', 'red', 'blue'])
+_cs2 = ax.contour(cost_array, levels=[6100, 6150, 6200, 6240], colors=['white', 'pink', 'red', 'blue'])
 
 x_label_list = ['0', '0.5', '1', '1.5', '2']
 y_label_list = ['0', '0.25', '0.5', '0.75', '1']

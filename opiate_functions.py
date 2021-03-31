@@ -7,7 +7,7 @@ from scipy.integrate import odeint
 t_max = 15
 
 # Time step of one month
-dt = 1 / 12
+dt = 0.0001
 
 
 def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s):
