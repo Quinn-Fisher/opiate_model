@@ -106,4 +106,4 @@ initial_conditions = [initP, initA, initR, initN, initAC, initRC]
 params = [alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s]
 tspan = np.arange(0, t_max, dt)
 sol = ode_solver(tspan, initial_conditions, params)
-S, P, A, R = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3]
+S, P, A, R, AC, RC = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3], sol[:, 4], sol[:, 5]
