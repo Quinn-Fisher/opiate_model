@@ -12,7 +12,7 @@ def new_alpha(t_start, t_end, level, initial=0.15):
             al = initial
 
         # End time of lock-down
-        elif t > t_start + t_end:
+        elif t > t_end:
             al = initial
 
         # During lock-down
