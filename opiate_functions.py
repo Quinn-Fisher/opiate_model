@@ -13,7 +13,7 @@ dt = 0.0001
 def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s):
     """Creates  Differential equations/compartments"""
 
-    S, P, A, R, AC, RC = z
+    S, P, A, R, AC, RC, D = z
     N = S + P + A + R
 
     # Use continuous parameter functions
@@ -31,19 +31,22 @@ def ode_model(z, t, alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, m
     dACdt = A
     dRCdt = R
 
-    return [dSdt, dPdt, dAdt, dRdt, dACdt, dRCdt]
+    # Set diff eq. for keeping track of death
+
+    dDdt = mu_s(t)*A
+    return [dSdt, dPdt, dAdt, dRdt, dACdt, dRCdt, dDdt]
 
 
 def ode_solver(t, initial_conditions, params):
     """ Solves system of ODE's using initial conditions, params, and  odeint from scipy"""
 
-    initP, initA, initR, initN, initAC, initRC = initial_conditions
+    initP, initA, initR, initN, initAC, initRC, initD = initial_conditions
 
     alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s = params
 
     initS = initN - (initP + initA + initR)
 
-    res = odeint(ode_model, [initS, initP, initA, initR, initAC, initRC], t,
+    res = odeint(ode_model, [initS, initP, initA, initR, initAC, initRC, initD], t,
                  args=(alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s))
     return res
 
@@ -60,11 +63,12 @@ def con_cost(t, initial_conditions, params, a_cost, r_cost, population=1):
 
 # Set up some default initial conditions (WILL BE CHANGED LATER)
 initN = 1  # Initial percentage of total population: keep at 1
-initP = 0  # Initial percentage of population in P compartment
-initA = 0  # Initial percentage of population in A compartment
-initR = 0  # Initial percentage of population in R compartment
+initP = 0.056  # Initial percentage of population in P compartment
+initA = 0.0057 # Initial percentage of population in A compartment
+initR = 0.0021  # Initial percentage of population in R compartment
 initAC = initA
 initRC = initR
+initD = initA * 0.01159
 
 
 # Parameter values taken from https://link.springer.com/article/10.1007/s11538-019-00605-0
@@ -111,8 +115,10 @@ def mu_s(t):
 
 
 # Set up default initial conditions, parameters, and solutions
-initial_conditions = [initP, initA, initR, initN, initAC, initRC]
+initial_conditions = [initP, initA, initR, initN, initAC, initRC, initD]
 params = [alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s]
-tspan = np.arange(0, t_max, dt)
+tspan = np.arange(0, 1, dt)
 sol = ode_solver(tspan, initial_conditions, params)
 S, P, A, R, AC, RC = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3], sol[:, 4], sol[:, 5]
+
+D = sol[:, 6]

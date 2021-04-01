@@ -8,14 +8,19 @@ import time
 # set up initial conditions
 initial = [0.056, 0.0057, 0.0021, op.initN, 0.0057, 0.0056]
 init_rates = [0.15, 0.00266, 0.0094, 0.00744]
-cost_array = tf.p_control_sim(0, 0.5, 3, 1, 2, initial, init_rates)
 
+# Calculate cost_array for various lock-down scenarios
+cost_array = tf.p_control_sim(0, 1, 2, 1.5, 1.5, initial, init_rates, 100000, 1, 1)
 
+# Create plot
 fig, ax = plt.subplots(figsize=(6, 6))
 im = ax.imshow(cost_array, interpolation='none')
+# Set ratio of x and y axis
 ax.set_aspect(2)
-_cs2 = ax.contour(cost_array, levels=[2325, 2375, 2425, 2475], colors=['white', 'pink', 'red', 'blue'])
+# Create Contour lines for specific values and labels
+_cs2 = ax.contour(cost_array, levels=[0.0278, 0.0282, 0.0285, 0.0287], colors=['white', 'pink', 'red', 'blue'])
 
+# Create and label notches on x and y axis
 x_label_list = ['0', '0.5', '1', '1.5', '2']
 y_label_list = ['0', '0.25', '0.5', '0.75', '1']
 ax.set_xticks([0, 50, 100, 150, 200])
@@ -23,6 +28,7 @@ ax.set_yticks([-0.5, 12, 24.5, 37, 49.5])
 ax.set_xticklabels(x_label_list)
 ax.set_yticklabels(y_label_list)
 
+# Create cbar to show cost values
 cbar = fig.colorbar(im, ax=ax)
 cbar.add_lines(_cs2)
 
@@ -31,6 +37,7 @@ plt.ylabel('Magnitude of Prescription Lock-Down (percentage of initial rate)')
 plt.title('Cost of 3-fold outbreak at month 0 until 1 years')
 plt.show()
 
+# IGNORE FOR NOW
 # Set outbreak conditions and "lock-down" length
 # ob = 3  # multiplicative of addiction rates
 # ob_start = 0  # years
@@ -58,4 +65,3 @@ plt.show()
 #
 # cost_array = np.array(cost_array)
 # print(time.time())
-
