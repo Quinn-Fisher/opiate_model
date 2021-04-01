@@ -96,7 +96,7 @@ def p_control_sim(ob_start, ob_end, ob_m, l_len, t_total,
     for i in np.arange(0, 1, 0.02):
 
         # Create list of lock-down prescription functions with magnitude i.
-        # Loop over various lengths of lock-down
+        # Loop over various initial time of lock-down
         timed_alpha = [new_alpha(j, j + l_len, i, a_init) for j in np.arange(0, t_total, 0.01)]
 
         # Create parameter list with lock-down various alpha(t) and outbreak addiction functions as parameters
