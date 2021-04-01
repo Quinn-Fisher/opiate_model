@@ -75,7 +75,7 @@ def alpha(t):
 
 
 def epsilon(t):
-    return 0.8
+    return 2.25
 
 
 def beta_p(t):
