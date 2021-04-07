@@ -9,57 +9,38 @@ import timeit
 #initial = [0.056, 0.0057, 0.0021, op.initN, 0.0057, 0.0056, 0]
 # init_rates = [0.15, 0.00266, 0.0094, 0.00744]
 
-cost_array = tf.p_control_sim(0, 1, 8, 1.5, 1.25, a_cost=1, r_cost=0)
+cost_array = np.array(tf.p_control_sim(0, 1, 3, 6))
+a = np.amin(cost_array)
+b = np.amax(cost_array)
+line1 = a + 0.25 * (b - a)
+line2 = a + 0.5 * (b - a)
+line3 = a + 0.75 * (b - a)
+
 # Create plot
 fig, ax = plt.subplots(figsize=(6, 6))
 im = ax.imshow(cost_array, interpolation='none')
 # Set ratio of x and y axis
 ax.set_aspect(1)
 # Create Contour lines for specific values and labels
-_cs2 = ax.contour(cost_array, levels=[0.0278, 0.0282, 0.0285, 0.0287], colors=['white', 'pink', 'red', 'blue'])
+_cs2 = ax.contour(cost_array, levels=[line1, line2, line3], colors=['white', 'red', 'magenta'],
+                  alpha=0.65)
 
 # Create and label notches on x and y axis
-x_label_list = ['0', '0.5', '1', '1.5', '2']
+x_label_list = ['0', '0.25', '0.5', '0.75', '1']
 y_label_list = ['0', '0.25', '0.5', '0.75', '1']
-ax.set_xticks([0, 10, 20, 30, 40])
-ax.set_yticks([0, 5, 10, 16, 19])
+ax.set_xticks([0, 5, 10, 15, 20])
+ax.set_yticks([0, 5, 10, 15, 20])
 ax.set_xticklabels(x_label_list)
 ax.set_yticklabels(y_label_list)
-
+# plt.axis('off')
+plt.xlabel('Start Time of Lockdown (years)')
+plt.ylabel('Lockdown Level (lambda)')
+plt.title('1 Year Outbreak ')
 # Create cbar to show cost values
-cbar = fig.colorbar(im, ax=ax)
-cbar.add_lines(_cs2)
 
-# plt.xlabel('Initial Time of Prescription Lock-down (years)')
-# plt.ylabel('Magnitude of Prescription Lock-Down (percentage of initial rate)')
-# plt.title('Cost of 3-fold outbreak at month 0 until 1 years')
+cbar = fig.colorbar(im, ax=ax, shrink=0.65)
+cbar.add_lines(_cs2)
 plt.show()
 
-# IGNORE FOR NOW
-# Set outbreak conditions and "lock-down" length
-# ob = 3  # multiplicative of addiction rates
-# ob_start = 0  # years
-# ob_end = 1  # years
-# lock_len = 1
-#
-# cost_time = 2
-#
-# cost_array = []
-# print(time.time())
-# for i in np.arange(0, 1, 0.02):
-#     timed_alpha = [tf.new_alpha(j, j + lock_len, i) for j in np.arange(0, cost_time, 0.01)]
-#
-#     params_list = [
-#         [timed_alpha[j], op.epsilon, tf.outbreak(ob_start, ob_end, ob)[0], tf.outbreak(ob_start, ob_end, ob)[1],
-#          tf.outbreak(ob_start, ob_end, ob)[2], op.zeta, op.delta, op.sigma, op.mu, op.mu_s] for j in
-#         range(0, len(timed_alpha))]
-#
-#     cost_list = [op.con_cost(np.arange(0, cost_time, op.dt), initial, params_list[j], 1, 1) for j in
-#                  range(0, len(params_list))]
-#
-#     cost_list = np.array(cost_list)
-#
-#     cost_array.append(cost_list)
-#
-# cost_array = np.array(cost_array)
-# print(time.time())
+print(np.amin(cost_array), np.amax(cost_array), 1 - np.amin(cost_array) / np.amax(cost_array))
+

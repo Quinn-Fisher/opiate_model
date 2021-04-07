@@ -22,26 +22,36 @@ import matplotlib.pyplot as plt
 # plt.show()
 
 
-# Trying to find how much to increase addiction to get an 18% increase in overdoses
+# rying to find how much to increase addiction to get an 18% increase in overdoses
+
+D_ratio = []
+
+for i in np.arange(0.5, 6.5, 0.5):
+    def betap(t):
+        return 0.00266 * i
 
 
-def betap(t):
-    return 0.00266 * 6
+    def betaa(t):
+        return 0.0094 * i
 
 
-def betaa(t):
-    return 0.0094 * 6
+    def gam(t):
+        return 0.00744 * i
 
 
-def gam(t):
-    return 0.00744 * 6
+    initial_conditions = [op.initP, op.initA, op.initR, op.initN, op.initAC, op.initRC, op.initD]
+    params1 = [op.alpha, op.epsilon, betap, betaa, gam, op.zeta, op.delta, op.sigma, op.mu, op.mu_s]
+    params2 = [op.alpha, op.epsilon, op.beta_p, op.beta_a, op.gamma, op.zeta, op.delta, op.sigma, op.mu, op.mu_s]
+    span = np.arange(0, 1/2, op.dt)
+    sol1 = op.ode_solver(span, initial_conditions, params1)
+    sol2 = op.ode_solver(span, initial_conditions, params2)
+    S1, P1, A1, R1, AC1, RC1, D1 = sol1[:, 0], sol1[:, 1], sol1[:, 2], sol1[:, 3], sol1[:, 4], sol1[:, 5], sol1[:, 6]
+    D2 = sol2[:, 6]
+
+    D_ratio.append(D1[-1] / D2[-1] - 1)
 
 
-initial_conditions = [op.initP, op.initA, op.initR, op.initN, op.initAC, op.initRC, op.initD]
-params = [op.alpha, op.epsilon, betap, betaa, gam, op.zeta, op.delta, op.sigma, op.mu, op.mu_s]
-span = np.arange(0, 1, op.dt)
-sol1 = op.ode_solver(span, initial_conditions, params)
-S1, P1, A1, R1, AC1, RC1, D1 = sol1[:, 0], sol1[:, 1], sol1[:, 2], sol1[:, 3], sol1[:, 4], sol1[:, 5], sol1[:, 6]
-plt.plot(op.tspan, op.AC)
-plt.plot(op.tspan, op.A)
+plt.plot(np.arange(0.5, 6.5, 0.5), D_ratio, '--bo')
+plt.xlabel("Addiction Coefficient (multiplying old addiction rates)")
+plt.ylabel("Percentage")
 plt.show()

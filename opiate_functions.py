@@ -4,7 +4,7 @@ import numpy as np
 from scipy.integrate import odeint
 
 # Maximum time (in years) for simulation to run
-t_max = 10
+t_max = 5
 
 # Time step
 dt = 0.0001
@@ -117,7 +117,7 @@ def mu_s(t):
 # Set up default initial conditions, parameters, and solutions
 initial_conditions = [initP, initA, initR, initN, initAC, initRC, initD]
 params = [alpha, epsilon, beta_p, beta_a, gamma, zeta, delta, sigma, mu, mu_s]
-tspan = np.arange(0, 1, dt)
+tspan = np.arange(0, 5, dt)
 sol = ode_solver(tspan, initial_conditions, params)
 S, P, A, R, AC, RC = sol[:, 0], sol[:, 1], sol[:, 2], sol[:, 3], sol[:, 4], sol[:, 5]
 
